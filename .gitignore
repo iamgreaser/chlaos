@@ -1,0 +1,6 @@
+# VIM
+.*.sw?
+
+# Emacs and other editors which like to spam backups
+*~
+
