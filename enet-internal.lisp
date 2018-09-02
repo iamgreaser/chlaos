@@ -75,6 +75,12 @@
   )
 (defcenum enet-socket-shutdown (:read 0) (:write 1) (:read-write 2))
 ;(defcenum enet-packet-flag ...)
+
+(defconstant +enet-packet-flag-reliable+ (ash 1 0))
+(defconstant +enet-packet-flag-unsequenced+ (ash 1 1))
+(defconstant +enet-packet-flag-no-allocate+ (ash 1 2))
+(defconstant +enet-packet-flag-unreliable-fragment+ (ash 1 3))
+
 (defctype enet-packet-flags enet-uint32)
 
 (defcenum enet-peer-state
@@ -350,6 +356,16 @@
 (defcfun "enet_peer_disconnect" :void
   (peer (:pointer (:struct enet-peer)))
   (data enet-uint32))
+
+(defcfun "enet_peer_send" :void
+  (peer (:pointer (:struct enet-peer)))
+  (channel-id enet-uint8)
+  (packet (:pointer (:struct enet-packet))))
+
+(defcfun "enet_packet_create" (:pointer (:struct enet-packet))
+  (data :pointer)
+  (data-length size-t)
+  (flags enet-uint32))
 
 (defcfun "enet_packet_destroy" :void
   (packet (:pointer (:struct enet-packet))))

@@ -79,6 +79,21 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun save-vxl-to-byte-array (vxl)
+  (let* ((output (make-array `(10)
+                             :element-type '(unsigned-byte 8)
+                             :adjustable t
+                             :fill-pointer 0)))
+    (macrolet ((w (n) `(vector-push-extend ,n output)))
+      (dotimes (y 512)
+        (dotimes (x 512)
+          (let* ((column (vxl-column vxl x y)))
+            (dotimes (i (length column))
+              (w (aref column i)))))))
+    output))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defgeneric vxl-column (vxl x y))
 (defgeneric (setf vxl-column) (column vxl x y))
 (defmethod vxl-column ((vxl vxl) x y)
